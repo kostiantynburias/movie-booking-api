@@ -32,3 +32,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             password=validated_data.get('password')
         )
         return user
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for viewing and updating user profile.
+    """
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'email', 'username', 'role']
+        read_only_fields = ['id', 'email', 'role']
