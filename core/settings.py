@@ -47,6 +47,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_spectacular',
     'django_cleanup.apps.CleanupConfig', 
 ]
 
@@ -165,6 +166,7 @@ REST_FRAMEWORK = {
         'anon': '100/day',
         'user': '1000/day',
     },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT Configuration
@@ -173,4 +175,13 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
+}
+
+# Swagger Configuration
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Movie Booking API',
+    'DESCRIPTION': 'RESTful API for managing cinema screenings, seat reservations, and user bookings.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
 }
