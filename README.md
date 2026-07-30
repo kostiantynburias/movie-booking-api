@@ -16,17 +16,18 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 
 * **Backend Framework:** Python 3.12, Django, Django REST Framework (DRF)
 * **Authentication:** SimpleJWT (JSON Web Tokens)
+* **API Documentation:** `drf-spectacular` (OpenAPI 3.0, Swagger UI & ReDoc)
 * **Database:** PostgreSQL 17
 * **Containerization:** Docker, Docker Compose
 * **Environment Management:** `python-dotenv`
-* **Planned Extensions:** `drf-spectacular` (OpenAPI/Swagger), Celery, Redis (for async ticket delivery & reservation cleanup)
+* **Planned Extensions:** Celery, Redis (for async ticket delivery & reservation cleanup)
 
 ---
 
 ## 🖼 Demo & Documentation
 
 > 🌐 **Live Demo:** Work in progress (Will be deployed upon API completion)  
-> 📑 **API Documentation:** Interactive Swagger / ReDoc OpenAPI endpoints will be available at `/api/v1/docs/` and `/api/v1/redoc/`
+> 📑 **API Documentation:** Interactive Swagger UI is available at `/api/v1/docs/` and ReDoc at `/api/v1/redoc/`
 
 ---
 
@@ -35,7 +36,7 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 * [x] **Docker Infrastructure:** Containerized environment with PostgreSQL and Django Web service.
 * [x] **Project Core Setup:** Configured environment variables, Database settings, and Security options.
 * [x] **Custom User Model & Auth:** JWT-based authentication, registration, user profile management, password change, and Role-Based Access Control (Admin / Customer).
-* [ ] **API Auto-Documentation:** OpenAPI 3.0 integration with Swagger UI (`drf-spectacular`).
+* [x] **API Auto-Documentation:** OpenAPI 3.0 integration with Swagger UI (`drf-spectacular`).
 * [ ] **Movie & Genre Management:** CRUD operations for movies and genres with `django-filter` support.
 * [ ] **Showtimes & Overlap Validation:** Automated screening overlap calculation considering movie runtime + 20-min mandatory hall cleaning break.
 * [ ] **Atomic Reservation Logic:** Concurrency control (`transaction.atomic()` + `select_for_update()`) with `UniqueConstraint(showtime, seat)` to guarantee 100% protection against double-booking.
@@ -110,8 +111,8 @@ movie-booking-api/
 ├── core/                    # Project configuration & settings
 │   ├── __init__.py
 │   ├── asgi.py
-│   ├── settings.py
-│   ├── urls.py              # Main URL routing
+│   ├── settings.py          # Configured DRF, SimpleJWT & drf-spectacular
+│   ├── urls.py              # Main URL routing with Swagger/ReDoc paths
 │   └── wsgi.py
 ├── .env                     # Environment variables (git-ignored)
 ├── .env.example             # Environment template for development
