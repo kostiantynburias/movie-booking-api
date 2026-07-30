@@ -24,9 +24,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        """
-        Creates and returns a new user with a hashed password.
-        """
         user = CustomUser.objects.create_user(
             email=validated_data.get('email'),
             password=validated_data.get('password')
@@ -43,3 +40,36 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'email', 'username', 'role']
         read_only_fields = ['id', 'email', 'role']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for changing user password.
+    """
+
+    old_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+    new_password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+    new_password_confirm = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'}
+    )
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Старий пароль вказано неправильно.')
+        return value
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password_confirm']:
+            raise serializers.ValidationError({'new_password_confirm': 'Нові паролі не збігаються.'})
+        return attrs
