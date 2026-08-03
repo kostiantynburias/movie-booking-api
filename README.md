@@ -37,7 +37,7 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 * [x] **Project Core Setup:** Configured environment variables, Database settings, and Security options.
 * [x] **Custom User Model & Auth:** JWT-based authentication, registration, user profile management, password change, and Role-Based Access Control (Admin / Customer).
 * [x] **API Auto-Documentation:** OpenAPI 3.0 integration with Swagger UI (`drf-spectacular`).
-* [ ] **Movie & Genre Management:** CRUD operations for movies and genres with `django-filter` support.
+* [x] **Movie & Genre Management:** CRUD operations for movies and genres with `django-filter` support.
 * [ ] **Showtimes & Overlap Validation:** Automated screening overlap calculation considering movie runtime + 20-min mandatory hall cleaning break.
 * [ ] **Atomic Reservation Logic:** Concurrency control (`transaction.atomic()` + `select_for_update()`) with `UniqueConstraint(showtime, seat)` to guarantee 100% protection against double-booking.
 * [ ] **Background Processing:** Celery tasks for auto-expiring 15-min unconfirmed holds and rendering PDF tickets.
@@ -99,30 +99,39 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 ```text
 movie-booking-api/
 ├── apps/                    # Custom Django applications
-│   └── users/               # Custom user model & authentication
-│       ├── migrations/
-│       ├── __init__.py
+│   ├── movies/              # Movie & Genre management
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── filters.py       # Custom MovieFilter (genres, duration, title search)
+│   │   ├── models.py
+│   │   ├── permissions.py   # Custom IsAdminOrReadOnly permission
+│   │   ├── serializers.py   # Genre & Movie serializers
+│   │   ├── tests.py
+│   │   ├── urls.py          # Movies API endpoints routing
+│   │   └── views.py         # GenreViewSet & MovieViewSet
+│   └── users/               # Authentication & User Management
 │       ├── admin.py
 │       ├── apps.py
-│       ├── models.py        # CustomUser (email, username, role)
-│       ├── serializers.py   # Register, Profile & ChangePassword serializers
-│       ├── urls.py          # User & Auth endpoints
-│       └── views.py         # Auth & User Views
-├── core/                    # Project configuration & settings
-│   ├── __init__.py
+│       ├── models.py        # CustomUser model (Email-based auth)
+│       ├── serializers.py   # Registration, Profile & Password Change serializers
+│       ├── tests.py
+│       ├── urls.py          # Auth API endpoints routing
+│       └── views.py         # Auth & User Profile views
+├── core/                    # Root project configuration
 │   ├── asgi.py
-│   ├── settings.py          # Configured DRF, SimpleJWT & drf-spectacular
-│   ├── urls.py              # Main URL routing with Swagger/ReDoc paths
+│   ├── settings.py          # Application settings & third-party packages config
+│   ├── urls.py              # Root URL routing & OpenAPI docs (Swagger/ReDoc)
 │   └── wsgi.py
-├── .env                     # Environment variables (git-ignored)
-├── .env.example             # Environment template for development
-├── .gitignore               # Git ignore rules
+├── media/                   # User-uploaded media files
+├── .env                     # Local environment variables (git-ignored)
+├── .env.example             # Environment template
+├── .gitignore
 ├── docker-compose.yml       # Multi-container orchestration
-├── Dockerfile               # Container image build configuration
-├── LICENSE                  # MIT License file
-├── manage.py                # Django management script
-├── README.md                # Project documentation
-└── requirements.txt         # Python dependencies
+├── Dockerfile               # Container build configuration
+├── LICENSE                  # MIT License
+├── manage.py
+├── README.md
+└── requirements.txt         # Project dependencies
 ```
 ---
 
