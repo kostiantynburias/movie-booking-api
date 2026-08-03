@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 
 from apps.movies.models import Genre, Movie
 from apps.movies.serializers import (
@@ -8,6 +8,7 @@ from apps.movies.serializers import (
     MovieCreateUpdateSerializer
 )
 from apps.movies.permissions import IsAdminOrReadOnly
+from apps.movies.filters import MovieFilter
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -19,6 +20,8 @@ class GenreViewSet(viewsets.ModelViewSet):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['name']
 
 
 class MovieViewSet(viewsets.ModelViewSet):
@@ -29,6 +32,7 @@ class MovieViewSet(viewsets.ModelViewSet):
 
     queryset = Movie.objects.prefetch_related('genres')
     permission_classes = (IsAdminOrReadOnly,)
+    filterset_class = MovieFilter
 
     def get_serializer_class(self):
         if self.action == 'list':

@@ -48,6 +48,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
+    'django_filters',
     'django_cleanup.apps.CleanupConfig', 
 ]
 
@@ -168,6 +169,7 @@ REST_FRAMEWORK = {
         'user': '1000/day',
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 # JWT Configuration
