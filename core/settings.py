@@ -54,7 +54,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'apps.users',
-    'apps.movies'
+    'apps.movies',
+    'apps.showtimes'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
