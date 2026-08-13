@@ -30,6 +30,7 @@ urlpatterns = [
     # API Endpoints
     path('api/v1/', include('apps.users.urls')),
     path('api/v1/', include('apps.movies.urls')),
+    path("api/v1/", include("apps.showtimes.urls")),
 
     # OpenAPI Schema & Documentation
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
