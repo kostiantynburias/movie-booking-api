@@ -38,7 +38,7 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 * [x] **Custom User Model & Auth:** JWT-based authentication, registration, user profile management, password change, and Role-Based Access Control (Admin / Customer).
 * [x] **API Auto-Documentation:** OpenAPI 3.0 integration with Swagger UI (`drf-spectacular`).
 * [x] **Movie & Genre Management:** CRUD operations for movies and genres with `django-filter` support.
-* [ ] **Showtimes & Overlap Validation:** Automated screening overlap calculation considering movie runtime + 20-min mandatory hall cleaning break.
+* [x] **Showtimes & Overlap Validation:** Automated screening overlap calculation considering movie runtime + 20-min mandatory hall cleaning break.
 * [ ] **Atomic Reservation Logic:** Concurrency control (`transaction.atomic()` + `select_for_update()`) with `UniqueConstraint(showtime, seat)` to guarantee 100% protection against double-booking.
 * [ ] **Background Processing:** Celery tasks for auto-expiring 15-min unconfirmed holds and rendering PDF tickets.
 
@@ -109,6 +109,15 @@ movie-booking-api/
 │   │   ├── tests.py
 │   │   ├── urls.py          # Movies API endpoints routing
 │   │   └── views.py         # GenreViewSet & MovieViewSet
+│   ├── showtimes/           # Showtimes & Schedule management
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── filters.py       # ShowtimeFilter (filter by date, movie)
+│   │   ├── models.py        # Showtime model with 20-min cleaning break validation
+│   │   ├── serializers.py   # Showtime serializers
+│   │   ├── tests.py
+│   │   ├── urls.py          # Showtimes API endpoints routing
+│   │   └── views.py         # ShowtimeViewSet
 │   └── users/               # Authentication & User Management
 │       ├── admin.py
 │       ├── apps.py
