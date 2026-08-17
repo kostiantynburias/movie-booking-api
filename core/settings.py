@@ -14,6 +14,7 @@ from datetime import timedelta
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -191,9 +192,32 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
-# Celery Configuration Options
+# Celery Configuration
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_TIMEZONE = 'Europe/Kyiv'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# Celery Beat Configuration
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-expired-reservations-every-minute': {
+        'task': 'apps.reservations.tasks.cleanup_expired_reservations',
+        'schedule': crontab(minute='*'),
+    },
+}
+
+# Email Configuration
+EMAIL_BACKEND = os.getenv(
+    'EMAIL_BACKEND', 
+    'django.core.mail.backends.console.EmailBackend'
+)
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.getenv(
+    'DEFAULT_FROM_EMAIL', 
+    'Cinema Booking <your-email@gmail.com>'
+)
