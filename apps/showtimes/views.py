@@ -6,10 +6,10 @@ from rest_framework.response import Response
 
 from apps.showtimes.models import Showtime
 from apps.showtimes.serializers import ShowtimeSerializer, ShowtimeCreateUpdateSerializer
-from apps.movies.permissions import IsAdminOrReadOnly
 from apps.showtimes.filters import ShowtimeFilter
 from apps.reservations.models import Seat, Ticket
 from apps.reservations.serializers import SeatAvailabilitySerializer
+from core.permissions import IsAdminOrReadOnly
 
 
 class ShowtimeViewSet(viewsets.ModelViewSet):

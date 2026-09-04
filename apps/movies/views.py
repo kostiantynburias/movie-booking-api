@@ -7,8 +7,8 @@ from apps.movies.serializers import (
     MovieDetailSerializer,
     MovieCreateUpdateSerializer
 )
-from apps.movies.permissions import IsAdminOrReadOnly
 from apps.movies.filters import MovieFilter
+from core.permissions import IsAdminOrReadOnly
 
 
 class GenreViewSet(viewsets.ModelViewSet):
