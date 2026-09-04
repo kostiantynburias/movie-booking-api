@@ -1,10 +1,13 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path, include
+from rest_framework.routers import SimpleRouter
+from apps.reservations.views import UserReservationsViewSet, AdminReservationsViewSet
 
-from apps.reservations.views import ReservationViewSet
+router = SimpleRouter()
 
-app_name = 'reservations'
+router.register(r'users/me/reservations', UserReservationsViewSet, basename='user-reservations')
 
-router = DefaultRouter()
-router.register(r'reservations', ReservationViewSet, basename="reservations")
+router.register(r'admin/reservations', AdminReservationsViewSet, basename='admin-reservations')
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+]
