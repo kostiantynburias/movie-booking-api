@@ -39,7 +39,7 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
 * [x] **API Auto-Documentation:** OpenAPI 3.0 integration with Swagger UI (`drf-spectacular`).
 * [x] **Movie & Genre Management:** CRUD operations for movies and genres with `django-filter` support.
 * [x] **Showtimes & Overlap Validation:** Automated screening overlap calculation considering movie runtime + 20-min mandatory hall cleaning break.
-* [ ] **Atomic Reservation Logic:** Concurrency control (`transaction.atomic()` + `select_for_update()`) with `UniqueConstraint(showtime, seat)` to guarantee 100% protection against double-booking.
+* [x] **Atomic Reservation Logic:** Concurrency control (`transaction.atomic()` + `select_for_update()`) with `UniqueConstraint(showtime, seat)` to guarantee 100% protection against double-booking.
 * [ ] **Background Processing:** Celery tasks for auto-expiring 15-min unconfirmed holds and rendering PDF tickets.
 
 ---
@@ -71,6 +71,18 @@ A RESTful API for managing single-hall cinema movie screenings, seat reservation
    POSTGRES_PASSWORD=postgres
    POSTGRES_HOST=db
    POSTGRES_PORT=5432
+
+   # Redis Connection URL
+   REDIS_URL=redis://redis:6379/0
+
+   # Email SMTP
+   EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_USE_TLS=True
+   EMAIL_HOST_USER=your-email@gmail.com
+   EMAIL_HOST_PASSWORD=your-app-password
+   DEFAULT_FROM_EMAIL="Cinema Booking <your-email@gmail.com>"
    ```
 
 3. **Build and Start Containers:** Run Docker Compose to build images and launch services in detached mode:
@@ -104,11 +116,19 @@ movie-booking-api/
 │   │   ├── apps.py
 │   │   ├── filters.py       # Custom MovieFilter (genres, duration, title search)
 │   │   ├── models.py
-│   │   ├── permissions.py   # Custom IsAdminOrReadOnly permission
 │   │   ├── serializers.py   # Genre & Movie serializers
 │   │   ├── tests.py
 │   │   ├── urls.py          # Movies API endpoints routing
 │   │   └── views.py         # GenreViewSet & MovieViewSet
+│   ├── reservations/        # Reservations & Ticket management
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py        # Reservation, Ticket, Seat models
+│   │   ├── serializers.py   # Base, Detail, List, Admin & Create serializers
+│   │   ├── tasks.py         # Celery tasks (e.g., send_ticket_email_task)
+│   │   ├── tests.py
+│   │   ├── urls.py          # Customer profile & Admin reservation endpoints
+│   │   └── views.py         # UserReservationsViewSet & AdminReservationsViewSet
 │   ├── showtimes/           # Showtimes & Schedule management
 │   │   ├── admin.py
 │   │   ├── apps.py
@@ -128,6 +148,8 @@ movie-booking-api/
 │       └── views.py         # Auth & User Profile views
 ├── core/                    # Root project configuration
 │   ├── asgi.py
+│   ├── celery.py            # Celery app instance and configuration
+│   ├── permissions.py       # Custom IsAdminOrReadOnly permission
 │   ├── settings.py          # Application settings & third-party packages config
 │   ├── urls.py              # Root URL routing & OpenAPI docs (Swagger/ReDoc)
 │   └── wsgi.py

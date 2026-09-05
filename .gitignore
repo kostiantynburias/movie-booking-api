@@ -74,7 +74,7 @@ coverage.xml
 # Tools & Services
 .ipynb_checkpoints
 .python-version
-celerybeat-schedule.*
+celerybeat-schedule*
 /site
 .mypy_cache/
 
