@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.reservations.models import Seat, Reservation, Ticket
+from apps.showtimes.serializers import ShowtimeSerializer
 
 
 class SeatSerializer(serializers.ModelSerializer):
@@ -54,20 +55,27 @@ class ReservationDetailSerializer(serializers.ModelSerializer):
     """Serializer for full reservation view with embedded tickets."""
 
     tickets = TicketSerializer(many=True, read_only=True)
+    showtime = ShowtimeSerializer(read_only=True)
 
     class Meta:
         model = Reservation
         fields = ['id', 'user', 'showtime', 'status', 'created_at', 'tickets']
 
 
+class AdminReservationDetailSerializer(ReservationDetailSerializer):
+    """Extended detail serializer for admins."""
+    ...
+    
+
 class ReservationListSerializer(serializers.ModelSerializer):
     """Lightweight serializer for user's reservation history."""
 
     tickets_count = serializers.SerializerMethodField()
+    showtime = ShowtimeSerializer(read_only=True)
 
     class Meta:
         model = Reservation
         fields = ['id', 'showtime', 'status', 'created_at', 'tickets_count']
 
     def get_tickets_count(self, obj):
-        return obj.tickets.count()
+        return len(obj.tickets.all())

@@ -9,6 +9,7 @@ from apps.reservations.serializers import (
     ReservationCreateSerializer,
     ReservationDetailSerializer,
     ReservationListSerializer,
+    AdminReservationDetailSerializer
 )
 from apps.reservations.tasks import send_ticket_email_task
 
@@ -206,4 +207,4 @@ class AdminReservationsViewSet(
     def get_serializer_class(self):
         if self.action == 'list':
             return ReservationListSerializer
-        return ReservationDetailSerializer
+        return AdminReservationDetailSerializer
